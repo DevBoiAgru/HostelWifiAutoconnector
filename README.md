@@ -57,6 +57,7 @@ These are passed as command-line arguments when the task runs.
     ![Run program](screenshots/image-7.png)
 
     3. In the Add arguments input, just input your username and password with a space in between. `25ABCD2004 password1234`
+    
     ![Task arguments](screenshots/image-8.png)
 
     4. Optional: In the Start in input, put the path of the folder wifitool.exe is located in. This will make it easier for you to find the tool's generated log file.
