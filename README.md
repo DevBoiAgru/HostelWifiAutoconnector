@@ -44,7 +44,7 @@ These are passed as command-line arguments when the task runs.
     2. Input the following details:
         - Log: `Microsoft-Windows-NetworkProfile/Operational`
         - Source: `Microsoft-Windows-NetworkProfile`
-        - Event ID: `10001`
+        - Event ID: `10000`
         ![Event setup](screenshots/image-5.png)
 
     This event makes it so that the tool runs and logs you in whenever a network is connected, so that you dont have to manually login.

@@ -2,18 +2,16 @@
 
 constexpr const std::string TARGET_SSID = "IIITU_Wireless";
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     logFile = fopen("log.txt", "a+");
 
     // Parse the command line arguments, in the form of tool.exe USERNAME PASSWORD
     // logout if run as tool.exe logout logout
     int argc = 0;
-    LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    LPWSTR* wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
-    if (argc < 3)
-    {
-        std::cout << "Launch the tool with 2 arguments. Example: tool.exe USERNAME PASSWORD\n";
+    if (argc < 3) {
+        std::cerr << "Launch the tool with 2 arguments. Example: tool.exe USERNAME PASSWORD\n";
         logToFile(
             "Tool launched without enough arguments.",
             LogMsgLevel::LOG_ERROR);
@@ -27,8 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     httplib::Client cli("192.168.100.1", 8090);
 
-    if (USERNAME == "logout" && PASSWORD == "logout")
-    {
+    if (USERNAME == "logout" && PASSWORD == "logout") {
         logout(cli);
         return 0;
     }
@@ -45,8 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         "Tool was executed! Let's see if we can do the fun stuff",
         LogMsgLevel::LOG_INFO);
 
-    for (int i = 0; i < ifList->dwNumberOfItems; i++)
-    {
+    for (int i = 0; i < ifList->dwNumberOfItems; i++) {
         GUID id = ifList->InterfaceInfo[i].InterfaceGuid;
 
         PWLAN_CONNECTION_ATTRIBUTES attr;
@@ -57,24 +53,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
             wlan_intf_opcode_current_connection,
             NULL,
             &outSize,
-            (PVOID *)&attr,
+            (PVOID*)&attr,
             NULL);
 
         DOT11_SSID ssid = attr->wlanAssociationAttributes.dot11Ssid;
         std::string networkSSID(
-            reinterpret_cast<const char *>(ssid.ucSSID),
+            reinterpret_cast<const char*>(ssid.ucSSID),
             ssid.uSSIDLength);
 
         // If we are connected to the target network, do the fun stuff
-        if (networkSSID == TARGET_SSID)
-        {
+        if (networkSSID == TARGET_SSID) {
             logToFile(
                 std::format("We are connected to {}. Let the fun stuff begin", TARGET_SSID).c_str(),
                 LogMsgLevel::LOG_INFO);
             funStuff(cli);
-        }
-        else
-        {
+        } else {
             logToFile(
                 std::format("We are NOT connected to {}. No fun stuff here, exitting.", TARGET_SSID).c_str(),
                 LogMsgLevel::LOG_INFO);
@@ -86,26 +79,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     return 0;
 }
 
-void funStuff(httplib::Client &httpClient)
-{
+void funStuff(httplib::Client& httpClient) {
 
-    if (auto res = httpClient.Get("/httpclient.html"))
-    {
+    if (auto res = httpClient.Get("/httpclient.html")) {
         logToFile(
             std::format("Login page httpclient.html online. Status: {}", res->status).c_str(),
             LogMsgLevel::LOG_INFO);
 
         // Send credentials and log in, then start the heartbeat loop
-        if (login(httpClient))
-        {
+        if (login(httpClient)) {
             logToFile(
                 "Starting heartbeat loop.",
                 LogMsgLevel::LOG_INFO);
             startHeartbeat(httpClient);
         }
-    }
-    else
-    {
+    } else {
         auto err = res.error();
         logToFile(
             std::format("HTTP Error while fetching /httpclient.html: {}", httplib::to_string(err)).c_str(),
@@ -114,8 +102,7 @@ void funStuff(httplib::Client &httpClient)
     }
 }
 
-bool login(httplib::Client &httpClient)
-{
+bool login(httplib::Client& httpClient) {
     auto now = std::chrono::system_clock::now();
 
     auto payload = std::format(
@@ -146,15 +133,12 @@ bool login(httplib::Client &httpClient)
         LogMsgLevel::LOG_INFO);
 
     // Check if login succeeded
-    if (res->body.find("Login failed") == std::string::npos)
-    {
+    if (res->body.find("Login failed") == std::string::npos) {
         logToFile(
             "Login succeeded.",
             LogMsgLevel::LOG_INFO);
         return true;
-    }
-    else
-    {
+    } else {
         logToFile(
             "Login failed.",
             LogMsgLevel::LOG_INFO);
@@ -162,8 +146,7 @@ bool login(httplib::Client &httpClient)
     }
 }
 
-void logout(httplib::Client &httpClient)
-{
+void logout(httplib::Client& httpClient) {
     auto now = std::chrono::system_clock::now();
     std::time_t epoch_time = std::chrono::system_clock::to_time_t(now);
 
@@ -189,10 +172,8 @@ void logout(httplib::Client &httpClient)
         LogMsgLevel::LOG_INFO);
 }
 
-void startHeartbeat(httplib::Client &httpClient)
-{
-    while (PROGRAM_RUNNING)
-    {
+void startHeartbeat(httplib::Client& httpClient) {
+    while (PROGRAM_RUNNING) {
         auto now = std::chrono::system_clock::now();
         auto payload = std::format(
             "mode=192&username={}&a={}&producttype=0",
@@ -204,14 +185,12 @@ void startHeartbeat(httplib::Client &httpClient)
     }
 }
 
-void logToFile(const char *message, LogMsgLevel lvl)
-{
+void logToFile(const char* message, LogMsgLevel lvl) {
     using namespace std::chrono;
 
     char logLvl[8];
 
-    switch (lvl)
-    {
+    switch (lvl) {
     case LOG_ERROR:
         strcpy(logLvl, "ERROR");
         break;
@@ -227,7 +206,7 @@ void logToFile(const char *message, LogMsgLevel lvl)
     auto local = floor<seconds>(now);
 
     auto tz = current_zone();
-    zoned_time zt{tz, local};
+    zoned_time zt { tz, local };
 
     auto currTimeStr = std::format("{:%d/%m/%y-%H:%M:%S}", zt);
 
