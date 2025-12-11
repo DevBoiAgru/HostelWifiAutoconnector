@@ -31,9 +31,9 @@ These are passed as command-line arguments when the task runs.
 1. Open **Task Scheduler**
 ![Task Scheduler](screenshots/image.png)
 
-2. Create a **New Task**, name it anything you like.
+2. Create a **New Task**, name it anything you like. Check "Start before logging in" so that the tool can authorise the wifi even before you enter your password.
 ![Create task](screenshots/image-1.png)
-![Task Name](screenshots/image-2.png)
+![Task Name and start before logging in](screenshots/image-2.png)
 
 3. Fill in the following:
     #### **Triggers tab**
