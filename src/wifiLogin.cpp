@@ -1,6 +1,7 @@
 #include "wifiLogin.h"
 
 constexpr const std::string TARGET_SSID = "IIITU_Wireless";
+constexpr const std::string ALT_TARGET_SSID = "IIITU_WIRELESS";
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     logFile = fopen("log.txt", "a+");
@@ -62,14 +63,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             ssid.uSSIDLength);
 
         // If we are connected to the target network, do the fun stuff
-        if (networkSSID == TARGET_SSID) {
+        if (networkSSID == TARGET_SSID || networkSSID == ALT_TARGET_SSID) {
             logToFile(
                 std::format("We are connected to {}. Let the fun stuff begin", TARGET_SSID).c_str(),
                 LogMsgLevel::LOG_INFO);
             funStuff(cli);
         } else {
             logToFile(
-                std::format("We are NOT connected to {}. No fun stuff here, exitting.", TARGET_SSID).c_str(),
+                std::format("We are NOT connected to {}. No fun stuff here, exitting. Connected to {}.", TARGET_SSID, networkSSID).c_str(),
                 LogMsgLevel::LOG_INFO);
         }
 
