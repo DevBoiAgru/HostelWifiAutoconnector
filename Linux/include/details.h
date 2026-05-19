@@ -11,7 +11,7 @@ namespace consts {
 // Enter your details here
 // USERNAME is the username for the Wi-Fi, which should be your roll number
 // PASSWORD is the password, which should be your roll number if you didn't change it
-const std::string USERNAME = "25ABCD1234";
+const std::string USERNAME = "25ABC000";
 const std::string PASSWORD = "PASSWORD";
 
 const std::string WIFI_NAME = "IIITU_Wireless";     // Wi-Fi name to execute on, case-insensitive
@@ -22,8 +22,7 @@ constexpr int CAPTIVE_PORTAL_PORT = 8090;
 // The URL to detect network, using a /generate_204
 const std::string PORTAL_DETECT_URL = "http://connectivitycheck.gstatic.com";
 
-//const std::string LOG_FILE_PATH = "/var/log/wifi_autoconnector.log";
-const std::string LOG_FILE_PATH = "/home/devboi/wifi_autoconnector.log";
+const std::string LOG_FILE_PATH = "/var/log/wifi_autoconnector.log";
 
 }
 
