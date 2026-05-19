@@ -13,7 +13,7 @@ int main(const int argc, char* argv[]) {
     if (argc < 3)
         return 0;
 
-    static std::ofstream log(consts::LOG_FILE_PATH, std::ios::app);
+    static std::ofstream log(consts::LOG_FILE_PATH, std::ios::trunc);
 
     std::cout.rdbuf(log.rdbuf());
     std::cerr.rdbuf(log.rdbuf());
